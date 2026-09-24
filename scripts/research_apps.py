@@ -52,7 +52,7 @@ def require_secret(name: str) -> str:
 
 
 async def research_with_retry(*args: object) -> tuple[str, list[str]]:
-    """Retry provider rate limits without hiding other failures."""
+    """Retry temporary provider failures without hiding permanent errors."""
 
     for attempt in range(1, 4):
         try:
@@ -60,14 +60,22 @@ async def research_with_retry(*args: object) -> tuple[str, list[str]]:
                 return await research_with_mcp(*args)
         except Exception as exc:
             message = str(exc)
-            if "429" not in message or "RESOURCE_EXHAUSTED" not in message:
+            is_rate_limit = "429" in message and "RESOURCE_EXHAUSTED" in message
+            is_temporary_outage = "503" in message and "UNAVAILABLE" in message
+            if not (is_rate_limit or is_temporary_outage):
                 raise
             if attempt == 3:
                 raise
             delay_match = re.search(r"retryDelay['\"]?:\s*['\"](\d+)s", message)
-            delay = min(int(delay_match.group(1)) + 1, 59) if delay_match else 59
+            if delay_match:
+                delay = min(int(delay_match.group(1)) + 1, 59)
+            elif is_temporary_outage:
+                delay = 20 * attempt
+            else:
+                delay = 59
             print(
-                f"  rate limited; retrying in {delay}s (attempt {attempt + 1}/3)",
+                f"  temporary provider failure; retrying in {delay}s "
+                f"(attempt {attempt + 1}/3)",
                 flush=True,
             )
             await asyncio.sleep(delay)

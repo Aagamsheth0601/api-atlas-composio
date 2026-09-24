@@ -179,3 +179,12 @@ the entire product.
   root, at the front of `sys.path` for direct file execution.
 - **Fix:** Bootstrap the resolved repository root before importing the local
   package, and keep the documented direct command covered by a subprocess test.
+
+### Temporary Gemini 503s were recorded as app failures
+
+- **Symptom:** HubSpot failed immediately with `503 UNAVAILABLE` during the full
+  run even though the message identified a temporary high-demand spike.
+- **Root cause:** The retry policy covered quota `429` responses but not transient
+  provider outages.
+- **Fix:** Retry both 429 rate limits and 503 unavailable responses with bounded
+  delays. Checkpointing keeps completed apps and failed apps are retried on resume.
