@@ -7,28 +7,37 @@ tracks how verification changes accuracy.
 
 ## Current checkpoint
 
-The live feasibility test passes end to end:
+The submitted quota-bounded run contains **48 validated apps from the supplied
+100-app manifest**, backed by 249 claim-level citations. The remaining 52 apps
+are explicitly shown as queued rather than silently inferred or fabricated.
+
+The live pipeline passes end to end:
 
 1. The Composio Python SDK creates a session restricted to two read-only
    `composio_search` tools.
 2. An authenticated Streamable HTTP MCP client discovers those tools.
 3. Gemini chooses search, then fetches an official page instead of trusting a
    search snippet.
-4. The ignored run artifact contains a grounded Salesforce answer and official
-   documentation URLs.
+4. Gemini extracts structured records in batches of up to five.
+5. JSON Schema and identity checks reject malformed or incomplete batches.
+6. Validated results and raw evidence are checkpointed separately for resume.
 
-The three-app feasibility pipeline also passes schema validation:
+An independent deep path completed 21 apps. Comparing those with the fast path
+showed 17/21 exact agreement on buildability verdict, but materially lower
+agreement on access tiers and MCP labels. An eight-app official-document audit
+therefore corrected high-impact authentication and access claims while keeping
+the raw model outputs unchanged.
 
-| App | Verdict | Confidence | Human review | Evidence |
-| --- | --- | ---: | --- | ---: |
-| Salesforce | Build now | 0.95 | No | 7 |
-| fanbasis | Build now | 0.80 | Yes | 7 |
-| PitchBook | Constrained | 0.80 | Yes | 7 |
+The self-contained submission page is committed at
+`case-study/dist/index.html`. Regenerate it from checkpointed research with:
 
-The pipeline checkpoints after every app, resumes validated records, retries
-provider rate limits, limits research turns and duration, and refuses to promote
-records that fail the JSON Schema. Generated feasibility results remain ignored
-until a human review promotes them.
+```powershell
+.\.venv\Scripts\python.exe .\case-study\generate.py
+```
+
+The page deliberately reports 48/100 coverage. Finishing the full manifest only
+requires rerunning the resumable pipeline with available model quota; no
+retrieval already cached needs to be repeated.
 
 ## Two-layer clustering
 
@@ -95,3 +104,14 @@ RPM limit. This makes the time/cost decision explicit before a large run begins.
 Accuracy is measured through a predeclared field-level audit, not inferred from
 model confidence. See `docs/accuracy-methodology.md` for the stratified sample,
 browser checks, correction loop, and the limited role of paid quota in scaling.
+
+Run the bounded, lower-call CRM pilot with deterministic MCP retrieval and
+batched synthesis:
+
+```powershell
+.\.venv\Scripts\python.exe .\scripts\research_fast.py --start-id 1 --end-id 10 --model gemini-3-flash-preview
+```
+
+This path checkpoints evidence after each app and results after each synthesis
+batch. It escalates uncertain records to the deeper agent instead of treating
+speed as proof of correctness.

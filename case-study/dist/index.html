@@ -1,0 +1,668 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>API Atlas — Evidence-first integration intelligence</title>
+  <meta name="description" content="A quota-bounded, evidence-first audit of 100 requested integrations, built with Composio SDK and MCP.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23091420'/%3E%3Cpath d='M14 43L27 17h10l13 26h-9l-2-5H25l-2 5zM28 31h8l-4-9z' fill='%23b7f34a'/%3E%3C/svg%3E">
+  <style>
+  :root{--ink:#091420;--panel:#101e2b;--panel2:#142536;--line:#294052;--paper:#eef3f0;--muted:#9aabb7;--lime:#b7f34a;--cyan:#56d9e9;--amber:#ffc857;--red:#ff756d;--max:1240px}
+  *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;background:var(--ink);color:var(--paper);font:16px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif} a{color:inherit} .wrap{width:min(var(--max),calc(100% - 40px));margin:auto} nav{height:64px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)} .brand{display:flex;gap:12px;align-items:center;font-weight:800;letter-spacing:.03em} .mark{width:28px;height:28px;border:2px solid var(--lime);display:grid;place-items:center;color:var(--lime);font-size:13px;transform:rotate(-4deg)} nav .meta{color:var(--muted);font-size:13px} header{padding:72px 0 44px} .eyebrow{color:var(--lime);text-transform:uppercase;letter-spacing:.14em;font-size:12px;font-weight:800} h1{font-size:clamp(40px,7vw,86px);line-height:.98;letter-spacing:-.055em;max-width:980px;margin:18px 0 24px} h1 em{color:var(--lime);font-style:normal} .lede{font-size:clamp(18px,2vw,24px);max-width:790px;color:#bfd0d9;margin:0} .disclosure{margin-top:26px;padding:14px 18px;border-left:3px solid var(--amber);background:#172536;color:#d8e2e7;max-width:900px} .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin:34px 0 72px} .metric{background:var(--panel);padding:24px} .metric strong{display:block;font-size:38px;letter-spacing:-.04em;color:var(--lime)} .metric span{color:var(--muted);font-size:14px} section{padding:64px 0;border-top:1px solid var(--line)} .section-head{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:32px} h2{font-size:clamp(30px,4vw,52px);letter-spacing:-.04em;line-height:1.05;margin:0} .section-head p{margin:0;color:#b7c7d0;font-size:18px;max-width:610px} .insights{display:grid;grid-template-columns:repeat(3,1fr);gap:16px} .insight{min-height:220px;background:var(--panel);border:1px solid var(--line);padding:26px;position:relative;overflow:hidden} .insight b{font-size:52px;color:var(--cyan);letter-spacing:-.06em} .insight h3{font-size:21px;margin:10px 0 8px} .insight p{color:var(--muted);margin:0} .insight:after{content:"";position:absolute;width:120px;height:120px;border:1px solid #234456;border-radius:50%;right:-55px;bottom:-55px} .categories{display:grid;grid-template-columns:repeat(5,1fr);gap:12px} .category-card{background:var(--panel);border:1px solid var(--line);padding:18px;min-height:138px;display:flex;flex-direction:column} .category-card span{font-size:13px;color:#c6d3da;min-height:42px} .category-card strong{font-size:30px;color:var(--lime)} .category-card small{color:var(--muted);margin-top:auto} .flow{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;counter-reset:step} .step{background:var(--panel2);border:1px solid var(--line);padding:18px;min-height:150px} .step:before{counter-increment:step;content:"0" counter(step);display:block;color:var(--lime);font-size:12px;font-weight:800;margin-bottom:30px} .step strong{display:block;margin-bottom:6px} .step span{font-size:13px;color:var(--muted)} .verification{display:grid;grid-template-columns:.9fr 1.1fr;gap:20px} .card{background:var(--panel);border:1px solid var(--line);padding:26px} .card h3{margin:0 0 8px;font-size:22px} .card>p{color:var(--muted);margin:0 0 24px} .agreement-row{display:grid;grid-template-columns:100px 1fr 44px;gap:10px;align-items:center;margin:13px 0;font-size:13px} .bar{height:8px;background:#243748;overflow:hidden} .bar i{display:block;height:100%;background:var(--cyan)} .agreement-row strong{text-align:right} .audit-score{display:flex;align-items:end;gap:12px;margin:16px 0 24px} .audit-score strong{font-size:58px;color:var(--lime);line-height:1} .audit-score span{color:var(--muted)} .callout{border-left:3px solid var(--cyan);padding:12px 16px;background:#142939;color:#cfdee5} .controls{display:flex;gap:10px;margin:22px 0 14px} input,select{background:var(--panel);color:var(--paper);border:1px solid var(--line);border-radius:0;padding:12px 14px;font:inherit} input{flex:1} select{min-width:230px} .table-shell{overflow:auto;border:1px solid var(--line);max-height:680px} table{border-collapse:collapse;width:100%;min-width:1040px;background:var(--panel)} th{position:sticky;top:0;background:#172838;color:#a9bbc5;text-align:left;text-transform:uppercase;letter-spacing:.08em;font-size:11px;z-index:2} th,td{padding:14px 16px;border-bottom:1px solid #233848;vertical-align:top} td{font-size:13px} td:first-child{min-width:190px} .row-id{color:#607a8a;margin-right:10px;font-variant-numeric:tabular-nums} .pill{display:inline-block;border:1px solid #3c5667;padding:3px 7px;font-size:11px;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap} .build_now,.confirmed{color:var(--lime);border-color:#5f8134} .constrained,.corrected{color:var(--amber);border-color:#7e6535} .outreach{color:var(--red);border-color:#78433f} .muted{color:var(--muted)} .verified{display:block;color:var(--cyan);font-size:10px;text-transform:uppercase;letter-spacing:.08em;margin:3px 0 0 28px} .subtle{color:var(--muted)} .evidence{display:block;color:var(--cyan);font-size:11px;margin-top:6px;text-decoration:none} .queued{opacity:.58} .audit-table{overflow:auto;margin-top:24px} .audit-table table{min-width:800px} .footnote{color:var(--muted);font-size:13px;margin-top:14px} footer{padding:48px 0 70px;border-top:1px solid var(--line);color:var(--muted)} footer strong{color:var(--paper)} @media(max-width:900px){.metrics,.insights{grid-template-columns:repeat(2,1fr)}.categories{grid-template-columns:repeat(2,1fr)}.flow{grid-template-columns:repeat(3,1fr)}.verification,.section-head{grid-template-columns:1fr}} @media(max-width:600px){.wrap{width:min(100% - 24px,var(--max))}header{padding-top:48px}.metrics,.insights{grid-template-columns:1fr}.categories{grid-template-columns:1fr 1fr}.flow{grid-template-columns:1fr 1fr}.controls{flex-direction:column}select{min-width:0;width:100%}nav .meta{display:none}}
+  </style>
+</head>
+<body>
+<div class="wrap"><nav><div class="brand"><span class="mark">A</span>API ATLAS</div><div class="meta">Composio Product Ops take-home · Sep 2026</div></nav></div>
+<header><div class="wrap"><div class="eyebrow">Evidence-first integration intelligence</div><h1>The APIs exist. <em>Access is the tax.</em></h1><p class="lede">A rerunnable agent mapped auth, credential friction, API breadth, MCP availability and buildability across a 100-app request queue.</p><div class="disclosure"><strong>Honest scope:</strong> 48 apps passed schema validation before the free model quota ended; 52 remain visibly queued. The pipeline is resumable, and no unresearched row is presented as a finding.</div></div></header>
+<main>
+<div class="wrap metrics"><div class="metric"><strong>48/100</strong><span>validated records</span></div><div class="metric"><strong>249</strong><span>claim-level citations</span></div><div class="metric"><strong>87%</strong><span>evidence from official sources</span></div><div class="metric"><strong>8</strong><span>apps manually spot-checked</span></div></div>
+<section><div class="wrap"><div class="section-head"><h2>What the first 48 reveal</h2><p>The early portfolio is highly buildable, but “public API” does not mean “frictionless integration.” Authentication is usually solvable; credentials, plan entitlements and admin control decide time-to-value.</p></div><div class="insights"><article class="insight"><b>94%</b><h3>Buildable now</h3><p>45 of 48 have a documented surface and viable authentication. The opportunity is packaging quality, not protocol invention.</p></article><article class="insight"><b>38/48</b><h3>OAuth is dominant—not exclusive</h3><p>OAuth and API keys/tokens frequently coexist. Treating an OAuth client ID as an API key was the fast pass’s most common taxonomy error.</p></article><article class="insight"><b>20</b><h3>Paid access is the common tax</h3><p>Half of the validated set requires a paid self-serve account for production access. Only 2 are explicitly admin-gated; the rest are mostly accessible, but not free.</p></article><article class="insight"><b>17</b><h3>MCP whitespace</h3><p>No credible MCP was found for 17 validated apps. Existing REST APIs make these practical toolkit opportunities rather than research projects.</p></article><article class="insight"><b>21</b><h3>Deep-run controls</h3><p>A separate agent researched 21 apps independently. Agreement was strong on category and verdict, weaker on access and MCP—exactly where manual review adds value.</p></article><article class="insight"><b>52</b><h3>Unknown stays unknown</h3><p>The unprocessed half is shown as queued. A funded rerun resumes from checkpoints; it does not repeat retrieval or silently fill gaps.</p></article></div></div></section>
+<section><div class="wrap"><div class="section-head"><h2>Coverage by request category</h2><p>Three categories reached complete coverage; later categories are partial because processing stopped at the daily quota—not because the agent selected easier companies.</p></div><div class="categories">
+  <div class="category-card"><span>CRM and Sales</span><strong>10/10</strong><small>10 build now · 8 free/trial</small></div>
+
+  <div class="category-card"><span>Support and Helpdesk</span><strong>10/10</strong><small>10 build now · 1 free/trial</small></div>
+
+  <div class="category-card"><span>Communications and Messaging</span><strong>8/10</strong><small>7 build now · 5 free/trial</small></div>
+
+  <div class="category-card"><span>Marketing, Ads, Email and Social</span><strong>7/10</strong><small>6 build now · 3 free/trial</small></div>
+
+  <div class="category-card"><span>Ecommerce</span><strong>10/10</strong><small>9 build now · 3 free/trial</small></div>
+
+  <div class="category-card"><span>Data, SEO and Scraping</span><strong>3/10</strong><small>3 build now · 0 free/trial</small></div>
+
+  <div class="category-card"><span>Developer, Infra and Data platforms</span><strong>0/10</strong><small>0 build now · 0 free/trial</small></div>
+
+  <div class="category-card"><span>Productivity and Project Management</span><strong>0/10</strong><small>0 build now · 0 free/trial</small></div>
+
+  <div class="category-card"><span>Finance and Fintech</span><strong>0/10</strong><small>0 build now · 0 free/trial</small></div>
+
+  <div class="category-card"><span>AI, Research and Media-native</span><strong>0/10</strong><small>0 build now · 0 free/trial</small></div>
+</div></div></section>
+<section><div class="wrap"><div class="section-head"><h2>The agent is a pipeline</h2><p>Research is deliberately split from synthesis. That makes evidence reusable, failures resumable and model substitutions measurable.</p></div><div class="flow"><div class="step"><strong>100-app manifest</strong><span>Stable IDs and ten supplied categories.</span></div><div class="step"><strong>Composio SDK</strong><span>Creates a scoped, read-only research session.</span></div><div class="step"><strong>Composio MCP</strong><span>Tavily discovers sources; fetch reads decisive pages.</span></div><div class="step"><strong>Batch synthesis</strong><span>Gemini extracts five evidence packets per request.</span></div><div class="step"><strong>Schema gate</strong><span>Wrong count, identity or shape fails atomically.</span></div><div class="step"><strong>Human loop</strong><span>Official docs resolve high-impact disagreements.</span></div></div></div></section>
+<section><div class="wrap"><div class="section-head"><h2>Verification, without a vanity score</h2><p>Accuracy is reported at the field level. Two agents can agree and still be wrong, so cross-run agreement locates risk; official-document checks correct it.</p></div><div class="verification"><article class="card"><h3>Independent-run agreement</h3><p>Exact matches across the 21 apps completed by both the fast and deep paths.</p>
+  <div class="agreement-row"><span>Category</span><div class="bar"><i style="width:100%"></i></div><strong>21/21</strong></div>
+
+  <div class="agreement-row"><span>Verdict</span><div class="bar"><i style="width:81%"></i></div><strong>17/21</strong></div>
+
+  <div class="agreement-row"><span>API breadth</span><div class="bar"><i style="width:57%"></i></div><strong>12/21</strong></div>
+
+  <div class="agreement-row"><span>MCP status</span><div class="bar"><i style="width:43%"></i></div><strong>9/21</strong></div>
+
+  <div class="agreement-row"><span>Access tier</span><div class="bar"><i style="width:24%"></i></div><strong>5/21</strong></div>
+
+  <div class="agreement-row"><span>Auth set</span><div class="bar"><i style="width:14%"></i></div><strong>3/21</strong></div>
+<div class="callout">Verdict agreement is useful. Low auth/access agreement shows why a single model confidence score is not proof.</div></article><article class="card"><h3>Official-doc spot check</h3><p>Eight apps across CRM, support, messaging, ecommerce, marketing and data.</p><div class="audit-score"><strong>16/16</strong><span>decisive auth + access fields<br>after the correction loop</span></div><div class="callout">The first pass needed corrections on 7 of 8 sampled apps—mostly taxonomy, not API existence. Raw records remain preserved; corrected fields are labeled “Human checked” below.</div></article></div><div class="audit-table"><table><thead><tr><th>App</th><th>Outcome</th><th>What changed / was confirmed</th><th>Proof</th></tr></thead><tbody>
+  <tr><td><strong>Salesforce</strong></td><td><span class="pill corrected">Corrected</span></td><td>Removed API key; Developer Edition provides self-serve API access.</td><td><a class="evidence" href="https://developer.salesforce.com/docs/platform/api-rest/guide/intro-rest-compatible-editions.html" target="_blank" rel="noreferrer">Official doc ↗</a></td></tr>
+
+  <tr><td><strong>HubSpot</strong></td><td><span class="pill corrected">Corrected</span></td><td>Private-app access tokens replace legacy API keys.</td><td><a class="evidence" href="https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/overview" target="_blank" rel="noreferrer">Official doc ↗</a></td></tr>
+
+  <tr><td><strong>Zendesk</strong></td><td><span class="pill corrected">Corrected</span></td><td>OAuth is preferred; legacy API tokens use Basic auth and client setup requires an admin.</td><td><a class="evidence" href="https://developer.zendesk.com/api-reference/introduction/security-and-auth/" target="_blank" rel="noreferrer">Official doc ↗</a></td></tr>
+
+  <tr><td><strong>Slack</strong></td><td><span class="pill corrected">Corrected</span></td><td>A free workspace can create and install a Slack app; paid plan is not the credential gate.</td><td><a class="evidence" href="https://api.slack.com/authentication" target="_blank" rel="noreferrer">Official doc ↗</a></td></tr>
+
+  <tr><td><strong>Shopify</strong></td><td><span class="pill corrected">Corrected</span></td><td>Requests use scoped access tokens; the app client identifier is not an API key.</td><td><a class="evidence" href="https://shopify.dev/docs/api/usage/authentication" target="_blank" rel="noreferrer">Official doc ↗</a></td></tr>
+
+  <tr><td><strong>Mailchimp</strong></td><td><span class="pill corrected">Corrected</span></td><td>API keys can be created from an account; capabilities still depend on plan level.</td><td><a class="evidence" href="https://mailchimp.com/developer/marketing/docs/fundamentals/" target="_blank" rel="noreferrer">Official doc ↗</a></td></tr>
+
+  <tr><td><strong>Discord</strong></td><td><span class="pill confirmed">Confirmed</span></td><td>OAuth2 and bot tokens were confirmed without a paid credential gate.</td><td><a class="evidence" href="https://discord.com/developers/docs/topics/oauth2" target="_blank" rel="noreferrer">Official doc ↗</a></td></tr>
+
+  <tr><td><strong>DataForSEO</strong></td><td><span class="pill corrected">Corrected</span></td><td>Production API access uses Basic auth; a free sandbox exists, while production is pay-as-you-go.</td><td><a class="evidence" href="https://docs.dataforseo.com/v3/auth/" target="_blank" rel="noreferrer">Official doc ↗</a></td></tr>
+</tbody></table></div><p class="footnote">This is a verification sample, not a claim that all 48 rows were manually certified. Non-audited records remain automated findings with linked evidence.</p></div></section>
+<section id="matrix"><div class="wrap"><div class="section-head"><h2>The 100-app matrix</h2><p>Search all supplied apps. Validated rows expose a decisive official source; queued rows make the remaining scope impossible to mistake for completed research.</p></div><div class="controls"><input id="search" aria-label="Search apps" placeholder="Search app, category, auth or verdict…"><select id="category" aria-label="Filter category"><option value="">All categories</option><option value="CRM and Sales">CRM and Sales</option><option value="Support and Helpdesk">Support and Helpdesk</option><option value="Communications and Messaging">Communications and Messaging</option><option value="Marketing, Ads, Email and Social">Marketing, Ads, Email and Social</option><option value="Ecommerce">Ecommerce</option><option value="Data, SEO and Scraping">Data, SEO and Scraping</option><option value="Developer, Infra and Data platforms">Developer, Infra and Data platforms</option><option value="Productivity and Project Management">Productivity and Project Management</option><option value="Finance and Fintech">Finance and Fintech</option><option value="AI, Research and Media-native">AI, Research and Media-native</option></select><select id="status" aria-label="Filter status"><option value="">All statuses</option><option value="validated">Validated</option><option value="queued">Queued</option></select></div><div class="table-shell"><table><thead><tr><th>App</th><th>Category</th><th>Auth</th><th>Credential access</th><th>API surface</th><th>Verdict + evidence</th></tr></thead><tbody id="rows">
+      <tr data-search="Salesforce CRM and Sales Oauth2 · Token REST · GRAPHQL build_now" data-category="CRM and Sales" data-status="validated">
+        <td><span class="row-id">01</span><strong>Salesforce</strong><span class="verified">Human checked</span></td>
+        <td>CRM and Sales</td>
+        <td>Oauth2 · Token</td>
+        <td><span class="pill access">Free Self Serve</span></td>
+        <td>REST · GRAPHQL <span class="subtle">/ broad</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://developer.salesforce.com/docs/platform/graphql/guide/get-started-graphql.html" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="HubSpot CRM and Sales Oauth2 · Token REST · GRAPHQL · WEBHOOK build_now" data-category="CRM and Sales" data-status="validated">
+        <td><span class="row-id">02</span><strong>HubSpot</strong><span class="verified">Human checked</span></td>
+        <td>CRM and Sales</td>
+        <td>Oauth2 · Token</td>
+        <td><span class="pill access">Free Self Serve</span></td>
+        <td>REST · GRAPHQL · WEBHOOK <span class="subtle">/ broad</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://community.hubspot.com/t/api-pricing/9952" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="Pipedrive CRM and Sales Oauth2 · Token REST · WEBHOOK build_now" data-category="CRM and Sales" data-status="validated">
+        <td><span class="row-id">03</span><strong>Pipedrive</strong></td>
+        <td>CRM and Sales</td>
+        <td>Oauth2 · Token</td>
+        <td><span class="pill access">Free Self Serve</span></td>
+        <td>REST · WEBHOOK <span class="subtle">/ moderate</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://www.pipedrive.com/en/features/crm-api" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="Attio CRM and Sales Oauth2 · Api Key REST · GRAPHQL · WEBHOOK · SDK build_now" data-category="CRM and Sales" data-status="validated">
+        <td><span class="row-id">04</span><strong>Attio</strong></td>
+        <td>CRM and Sales</td>
+        <td>Oauth2 · Api Key</td>
+        <td><span class="pill access">Free Self Serve</span></td>
+        <td>REST · GRAPHQL · WEBHOOK · SDK <span class="subtle">/ broad</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://docs.attio.com/rest-api/overview" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="Twenty CRM and Sales Oauth2 · Api Key · Token REST · GRAPHQL · WEBHOOK · SDK build_now" data-category="CRM and Sales" data-status="validated">
+        <td><span class="row-id">05</span><strong>Twenty</strong></td>
+        <td>CRM and Sales</td>
+        <td>Oauth2 · Api Key · Token</td>
+        <td><span class="pill access">Trial Self Serve</span></td>
+        <td>REST · GRAPHQL · WEBHOOK · SDK <span class="subtle">/ broad</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://twenty.com/pricing" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="Podio CRM and Sales Oauth2 · Api Key · Token REST · WEBHOOK build_now" data-category="CRM and Sales" data-status="validated">
+        <td><span class="row-id">06</span><strong>Podio</strong></td>
+        <td>CRM and Sales</td>
+        <td>Oauth2 · Api Key · Token</td>
+        <td><span class="pill access">Free Self Serve</span></td>
+        <td>REST · WEBHOOK <span class="subtle">/ moderate</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://developers.podio.com/index/faq" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="Zoho CRM CRM and Sales Oauth2 · Api Key · Token REST · WEBHOOK · GRAPHQL build_now" data-category="CRM and Sales" data-status="validated">
+        <td><span class="row-id">07</span><strong>Zoho CRM</strong></td>
+        <td>CRM and Sales</td>
+        <td>Oauth2 · Api Key · Token</td>
+        <td><span class="pill access">Free Self Serve</span></td>
+        <td>REST · WEBHOOK · GRAPHQL <span class="subtle">/ broad</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://www.zoho.com/crm/developer/docs/functions/serverless.html" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="Close CRM and Sales Api Key · Oauth2 · Token REST · WEBHOOK · SDK build_now" data-category="CRM and Sales" data-status="validated">
+        <td><span class="row-id">08</span><strong>Close</strong></td>
+        <td>CRM and Sales</td>
+        <td>Api Key · Oauth2 · Token</td>
+        <td><span class="pill access">Free Self Serve</span></td>
+        <td>REST · WEBHOOK · SDK <span class="subtle">/ moderate</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://developer.close.com/integrations" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="Copper CRM and Sales Oauth2 · Api Key · Token REST build_now" data-category="CRM and Sales" data-status="validated">
+        <td><span class="row-id">09</span><strong>Copper</strong></td>
+        <td>CRM and Sales</td>
+        <td>Oauth2 · Api Key · Token</td>
+        <td><span class="pill access">Paid Self Serve</span></td>
+        <td>REST <span class="subtle">/ moderate</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://developer.copper.com/introduction/authentication.html" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="DealCloud CRM and Sales Oauth2 · Api Key REST build_now" data-category="CRM and Sales" data-status="validated">
+        <td><span class="row-id">10</span><strong>DealCloud</strong></td>
+        <td>CRM and Sales</td>
+        <td>Oauth2 · Api Key</td>
+        <td><span class="pill access">Paid Self Serve</span></td>
+        <td>REST <span class="subtle">/ moderate</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://api.docs.dealcloud.com/mcp/authentication" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="Zendesk Support and Helpdesk Oauth2 · Token · Basic REST build_now" data-category="Support and Helpdesk" data-status="validated">
+        <td><span class="row-id">11</span><strong>Zendesk</strong><span class="verified">Human checked</span></td>
+        <td>Support and Helpdesk</td>
+        <td>Oauth2 · Token · Basic</td>
+        <td><span class="pill access">Trial Self Serve</span></td>
+        <td>REST <span class="subtle">/ broad</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://developer.zendesk.com/api-reference/introduction/security-and-auth" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="Intercom Support and Helpdesk Oauth2 · Token REST build_now" data-category="Support and Helpdesk" data-status="validated">
+        <td><span class="row-id">12</span><strong>Intercom</strong></td>
+        <td>Support and Helpdesk</td>
+        <td>Oauth2 · Token</td>
+        <td><span class="pill access">Paid Self Serve</span></td>
+        <td>REST <span class="subtle">/ broad</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://developers.intercom.com/docs/build-an-integration/learn-more/authentication" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="Freshdesk Support and Helpdesk Api Key · Token · Oauth2 REST build_now" data-category="Support and Helpdesk" data-status="validated">
+        <td><span class="row-id">13</span><strong>Freshdesk</strong></td>
+        <td>Support and Helpdesk</td>
+        <td>Api Key · Token · Oauth2</td>
+        <td><span class="pill access">Paid Self Serve</span></td>
+        <td>REST <span class="subtle">/ broad</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://support.freshdesk.com/support/solutions/articles/225435-where-can-i-find-my-api-key-" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="Front Support and Helpdesk Oauth2 · Api Key · Token REST build_now" data-category="Support and Helpdesk" data-status="validated">
+        <td><span class="row-id">14</span><strong>Front</strong></td>
+        <td>Support and Helpdesk</td>
+        <td>Oauth2 · Api Key · Token</td>
+        <td><span class="pill access">Paid Self Serve</span></td>
+        <td>REST <span class="subtle">/ broad</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://community.front.com/developers-36/index6.html" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="Pylon Support and Helpdesk Api Key · Token REST build_now" data-category="Support and Helpdesk" data-status="validated">
+        <td><span class="row-id">15</span><strong>Pylon</strong></td>
+        <td>Support and Helpdesk</td>
+        <td>Api Key · Token</td>
+        <td><span class="pill access">Paid Self Serve</span></td>
+        <td>REST <span class="subtle">/ moderate</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://docs.usepylon.com/pylon-docs/developer/api/authentication" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="LiveAgent Support and Helpdesk Api Key REST build_now" data-category="Support and Helpdesk" data-status="validated">
+        <td><span class="row-id">16</span><strong>LiveAgent</strong></td>
+        <td>Support and Helpdesk</td>
+        <td>Api Key</td>
+        <td><span class="pill access">Paid Self Serve</span></td>
+        <td>REST <span class="subtle">/ moderate</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://www.liveagent.com/pricing" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="Plain Support and Helpdesk Api Key · Token · Other GRAPHQL · SDK · OTHER build_now" data-category="Support and Helpdesk" data-status="validated">
+        <td><span class="row-id">17</span><strong>Plain</strong></td>
+        <td>Support and Helpdesk</td>
+        <td>Api Key · Token · Other</td>
+        <td><span class="pill access">Paid Self Serve</span></td>
+        <td>GRAPHQL · SDK · OTHER <span class="subtle">/ broad</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://docs.plain.com/core-api/authentication" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="Help Scout Support and Helpdesk Oauth2 · Api Key · Token REST · SDK · OTHER build_now" data-category="Support and Helpdesk" data-status="validated">
+        <td><span class="row-id">18</span><strong>Help Scout</strong></td>
+        <td>Support and Helpdesk</td>
+        <td>Oauth2 · Api Key · Token</td>
+        <td><span class="pill access">Paid Self Serve</span></td>
+        <td>REST · SDK · OTHER <span class="subtle">/ moderate</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://docs.helpscout.com/article/1140-mailbox-api" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="Gorgias Support and Helpdesk Api Key · Other REST build_now" data-category="Support and Helpdesk" data-status="validated">
+        <td><span class="row-id">19</span><strong>Gorgias</strong></td>
+        <td>Support and Helpdesk</td>
+        <td>Api Key · Other</td>
+        <td><span class="pill access">Paid Self Serve</span></td>
+        <td>REST <span class="subtle">/ moderate</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://docs.gorgias.com/en-US/rest-api-208286" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="Gladly Support and Helpdesk Api Key · Oauth2 REST build_now" data-category="Support and Helpdesk" data-status="validated">
+        <td><span class="row-id">20</span><strong>Gladly</strong></td>
+        <td>Support and Helpdesk</td>
+        <td>Api Key · Oauth2</td>
+        <td><span class="pill access">Paid Self Serve</span></td>
+        <td>REST <span class="subtle">/ moderate</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://developer.gladly.com" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="Slack Communications and Messaging Oauth2 · Token · Other REST · SDK · OTHER build_now" data-category="Communications and Messaging" data-status="validated">
+        <td><span class="row-id">21</span><strong>Slack</strong><span class="verified">Human checked</span></td>
+        <td>Communications and Messaging</td>
+        <td>Oauth2 · Token · Other</td>
+        <td><span class="pill access">Free Self Serve</span></td>
+        <td>REST · SDK · OTHER <span class="subtle">/ broad</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://api.slack.com/web" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="Twilio Communications and Messaging Api Key · Other REST · SDK build_now" data-category="Communications and Messaging" data-status="validated">
+        <td><span class="row-id">22</span><strong>Twilio</strong></td>
+        <td>Communications and Messaging</td>
+        <td>Api Key · Other</td>
+        <td><span class="pill access">Paid Self Serve</span></td>
+        <td>REST · SDK <span class="subtle">/ broad</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://www.twilio.com/docs/iam/api" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="Zoho Cliq Communications and Messaging Oauth2 REST build_now" data-category="Communications and Messaging" data-status="validated">
+        <td><span class="row-id">23</span><strong>Zoho Cliq</strong></td>
+        <td>Communications and Messaging</td>
+        <td>Oauth2</td>
+        <td><span class="pill access">Paid Self Serve</span></td>
+        <td>REST <span class="subtle">/ moderate</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://www.zoho.com/cliq/help/restapi/v2#Post_file_to_chat" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="Lark (Larksuite) Communications and Messaging Oauth2 · Api Key · Token REST build_now" data-category="Communications and Messaging" data-status="validated">
+        <td><span class="row-id">24</span><strong>Lark (Larksuite)</strong></td>
+        <td>Communications and Messaging</td>
+        <td>Oauth2 · Api Key · Token</td>
+        <td><span class="pill access">Free Self Serve</span></td>
+        <td>REST <span class="subtle">/ broad</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://open.larksuite.com/document/ugTOwEjL4kDMx4CO5ATM/uMzMyYjLzMjM24yMzIjN" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="Pumble Communications and Messaging Api Key REST build_now" data-category="Communications and Messaging" data-status="validated">
+        <td><span class="row-id">25</span><strong>Pumble</strong></td>
+        <td>Communications and Messaging</td>
+        <td>Api Key</td>
+        <td><span class="pill access">Free Self Serve</span></td>
+        <td>REST <span class="subtle">/ narrow</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://pumble.com/help/pt/integrations/add-pumble-apps/api-keys-integration" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="Discord Communications and Messaging Oauth2 · Token REST build_now" data-category="Communications and Messaging" data-status="validated">
+        <td><span class="row-id">26</span><strong>Discord</strong><span class="verified">Human checked</span></td>
+        <td>Communications and Messaging</td>
+        <td>Oauth2 · Token</td>
+        <td><span class="pill access">Free Self Serve</span></td>
+        <td>REST <span class="subtle">/ broad</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://docs.discord.com/developers/reference" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="Telegram Communications and Messaging Api Key · Token · Other REST · SDK · OTHER build_now" data-category="Communications and Messaging" data-status="validated">
+        <td><span class="row-id">27</span><strong>Telegram</strong></td>
+        <td>Communications and Messaging</td>
+        <td>Api Key · Token · Other</td>
+        <td><span class="pill access">Free Self Serve</span></td>
+        <td>REST · SDK · OTHER <span class="subtle">/ broad</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://core.telegram.org" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="WhatsApp Business Communications and Messaging Oauth2 · Api Key REST · SDK constrained" data-category="Communications and Messaging" data-status="validated">
+        <td><span class="row-id">28</span><strong>WhatsApp Business</strong></td>
+        <td>Communications and Messaging</td>
+        <td>Oauth2 · Api Key</td>
+        <td><span class="pill access">Paid Self Serve</span></td>
+        <td>REST · SDK <span class="subtle">/ broad</span></td>
+        <td><span class="pill verdict constrained">Constrained</span><a class="evidence" href="https://developers.facebook.com/docs/whatsapp/overview" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+        <tr class="queued" data-search="Aircall Communications and Messaging" data-category="Communications and Messaging" data-status="queued">
+          <td><span class="row-id">29</span><strong>Aircall</strong></td>
+          <td>Communications and Messaging</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Vonage Communications and Messaging" data-category="Communications and Messaging" data-status="queued">
+          <td><span class="row-id">30</span><strong>Vonage</strong></td>
+          <td>Communications and Messaging</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Google Ads Marketing, Ads, Email and Social" data-category="Marketing, Ads, Email and Social" data-status="queued">
+          <td><span class="row-id">31</span><strong>Google Ads</strong></td>
+          <td>Marketing, Ads, Email and Social</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Meta Ads Marketing, Ads, Email and Social" data-category="Marketing, Ads, Email and Social" data-status="queued">
+          <td><span class="row-id">32</span><strong>Meta Ads</strong></td>
+          <td>Marketing, Ads, Email and Social</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+      <tr data-search="LinkedIn Ads Marketing, Ads, Email and Social Oauth2 · Api Key REST · UNKNOWN constrained" data-category="Marketing, Ads, Email and Social" data-status="validated">
+        <td><span class="row-id">33</span><strong>LinkedIn Ads</strong></td>
+        <td>Marketing, Ads, Email and Social</td>
+        <td>Oauth2 · Api Key</td>
+        <td><span class="pill access">Admin Gated</span></td>
+        <td>REST · UNKNOWN <span class="subtle">/ unknown</span></td>
+        <td><span class="pill verdict constrained">Constrained</span><a class="evidence" href="https://www.get-ryze.ai/linkedin-ads-mcp" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="GoHighLevel Marketing, Ads, Email and Social Oauth2 · Api Key REST · WEBHOOK · OTHER build_now" data-category="Marketing, Ads, Email and Social" data-status="validated">
+        <td><span class="row-id">34</span><strong>GoHighLevel</strong></td>
+        <td>Marketing, Ads, Email and Social</td>
+        <td>Oauth2 · Api Key</td>
+        <td><span class="pill access">Unknown</span></td>
+        <td>REST · WEBHOOK · OTHER <span class="subtle">/ moderate</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://highlevel.stoplight.io" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="Mailchimp Marketing, Ads, Email and Social Oauth2 · Api Key · Basic · Token REST · WEBHOOK · SDK · OTHER build_now" data-category="Marketing, Ads, Email and Social" data-status="validated">
+        <td><span class="row-id">35</span><strong>Mailchimp</strong><span class="verified">Human checked</span></td>
+        <td>Marketing, Ads, Email and Social</td>
+        <td>Oauth2 · Api Key · Basic · Token</td>
+        <td><span class="pill access">Free Self Serve</span></td>
+        <td>REST · WEBHOOK · SDK · OTHER <span class="subtle">/ broad</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://mailchimp.com/developer/marketing/" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="Klaviyo Marketing, Ads, Email and Social Oauth2 · Api Key · Token REST · SDK · OTHER build_now" data-category="Marketing, Ads, Email and Social" data-status="validated">
+        <td><span class="row-id">36</span><strong>Klaviyo</strong></td>
+        <td>Marketing, Ads, Email and Social</td>
+        <td>Oauth2 · Api Key · Token</td>
+        <td><span class="pill access">Paid Self Serve</span></td>
+        <td>REST · SDK · OTHER <span class="subtle">/ broad</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://developers.klaviyo.com/en/v2023-01-24/docs/retrieve_api_credentials" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="systeme.io Marketing, Ads, Email and Social Api Key REST build_now" data-category="Marketing, Ads, Email and Social" data-status="validated">
+        <td><span class="row-id">37</span><strong>systeme.io</strong></td>
+        <td>Marketing, Ads, Email and Social</td>
+        <td>Api Key</td>
+        <td><span class="pill access">Free Self Serve</span></td>
+        <td>REST <span class="subtle">/ broad</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://api.systeme.io/documentation" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="Pinterest Marketing, Ads, Email and Social Oauth2 REST · SDK build_now" data-category="Marketing, Ads, Email and Social" data-status="validated">
+        <td><span class="row-id">38</span><strong>Pinterest</strong></td>
+        <td>Marketing, Ads, Email and Social</td>
+        <td>Oauth2</td>
+        <td><span class="pill access">Trial Self Serve</span></td>
+        <td>REST · SDK <span class="subtle">/ broad</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://developers.pinterest.com/docs/api/v5/introduction" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="Threads (Meta) Marketing, Ads, Email and Social Oauth2 REST build_now" data-category="Marketing, Ads, Email and Social" data-status="validated">
+        <td><span class="row-id">39</span><strong>Threads (Meta)</strong></td>
+        <td>Marketing, Ads, Email and Social</td>
+        <td>Oauth2</td>
+        <td><span class="pill access">Admin Gated</span></td>
+        <td>REST <span class="subtle">/ moderate</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://developers.facebook.com/docs/threads" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+        <tr class="queued" data-search="SendGrid Marketing, Ads, Email and Social" data-category="Marketing, Ads, Email and Social" data-status="queued">
+          <td><span class="row-id">40</span><strong>SendGrid</strong></td>
+          <td>Marketing, Ads, Email and Social</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+      <tr data-search="Shopify Ecommerce Oauth2 · Token REST · GRAPHQL · SDK build_now" data-category="Ecommerce" data-status="validated">
+        <td><span class="row-id">41</span><strong>Shopify</strong><span class="verified">Human checked</span></td>
+        <td>Ecommerce</td>
+        <td>Oauth2 · Token</td>
+        <td><span class="pill access">Free Self Serve</span></td>
+        <td>REST · GRAPHQL · SDK <span class="subtle">/ broad</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://shopify.dev/docs/api/usage/authentication" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="WooCommerce Ecommerce Api Key · Oauth2 REST · SDK build_now" data-category="Ecommerce" data-status="validated">
+        <td><span class="row-id">42</span><strong>WooCommerce</strong></td>
+        <td>Ecommerce</td>
+        <td>Api Key · Oauth2</td>
+        <td><span class="pill access">Free Self Serve</span></td>
+        <td>REST · SDK <span class="subtle">/ broad</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://woocommerce.com/document/woocommerce-rest-api" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="BigCommerce Ecommerce Oauth2 · Api Key REST · GRAPHQL · SDK build_now" data-category="Ecommerce" data-status="validated">
+        <td><span class="row-id">43</span><strong>BigCommerce</strong></td>
+        <td>Ecommerce</td>
+        <td>Oauth2 · Api Key</td>
+        <td><span class="pill access">Free Self Serve</span></td>
+        <td>REST · GRAPHQL · SDK <span class="subtle">/ broad</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://developer.bigcommerce.com/api-docs/getting-started/about-our-api" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="Salesforce Commerce Cloud Ecommerce Oauth2 · Api Key · Token · Other REST · GRAPHQL · SDK · CLI build_now" data-category="Ecommerce" data-status="validated">
+        <td><span class="row-id">44</span><strong>Salesforce Commerce Cloud</strong></td>
+        <td>Ecommerce</td>
+        <td>Oauth2 · Api Key · Token · Other</td>
+        <td><span class="pill access">Unknown</span></td>
+        <td>REST · GRAPHQL · SDK · CLI <span class="subtle">/ broad</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://developer.salesforce.com/docs/commerce/commerce-api/references/custom-apis" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="Magento (Adobe Commerce) Ecommerce Oauth2 · Token · Basic REST · GRAPHQL · SOAP build_now" data-category="Ecommerce" data-status="validated">
+        <td><span class="row-id">45</span><strong>Magento (Adobe Commerce)</strong></td>
+        <td>Ecommerce</td>
+        <td>Oauth2 · Token · Basic</td>
+        <td><span class="pill access">Unknown</span></td>
+        <td>REST · GRAPHQL · SOAP <span class="subtle">/ broad</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://developer.adobe.com/commerce/webapi/rest/authentication" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="Squarespace Ecommerce Oauth2 · Api Key · Token REST · SDK build_now" data-category="Ecommerce" data-status="validated">
+        <td><span class="row-id">46</span><strong>Squarespace</strong></td>
+        <td>Ecommerce</td>
+        <td>Oauth2 · Api Key · Token</td>
+        <td><span class="pill access">Paid Self Serve</span></td>
+        <td>REST · SDK <span class="subtle">/ moderate</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://developers.squarespace.com/commerce-apis/authentication-and-permissions" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="Ecwid Ecommerce Oauth2 · Token REST · SDK build_now" data-category="Ecommerce" data-status="validated">
+        <td><span class="row-id">47</span><strong>Ecwid</strong></td>
+        <td>Ecommerce</td>
+        <td>Oauth2 · Token</td>
+        <td><span class="pill access">Paid Self Serve</span></td>
+        <td>REST · SDK <span class="subtle">/ moderate</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://api-docs.ecwid.com/reference/get-started-with-rest-api" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="Gumroad Ecommerce Oauth2 · Api Key · Token REST · SDK · CLI build_now" data-category="Ecommerce" data-status="validated">
+        <td><span class="row-id">48</span><strong>Gumroad</strong></td>
+        <td>Ecommerce</td>
+        <td>Oauth2 · Api Key · Token</td>
+        <td><span class="pill access">Unknown</span></td>
+        <td>REST · SDK · CLI <span class="subtle">/ moderate</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://gumroad.com/api" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="Amazon Selling Partner Ecommerce Oauth2 · Token REST · SDK build_now" data-category="Ecommerce" data-status="validated">
+        <td><span class="row-id">49</span><strong>Amazon Selling Partner</strong></td>
+        <td>Ecommerce</td>
+        <td>Oauth2 · Token</td>
+        <td><span class="pill access">Unknown</span></td>
+        <td>REST · SDK <span class="subtle">/ broad</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://developer-docs.amazon.com/sp-api/docs/what-is-the-selling-partner-api" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="fanbasis Ecommerce Oauth2 · Api Key · Token REST · SDK outreach" data-category="Ecommerce" data-status="validated">
+        <td><span class="row-id">50</span><strong>fanbasis</strong></td>
+        <td>Ecommerce</td>
+        <td>Oauth2 · Api Key · Token</td>
+        <td><span class="pill access">Unknown</span></td>
+        <td>REST · SDK <span class="subtle">/ broad</span></td>
+        <td><span class="pill verdict outreach">Outreach</span><a class="evidence" href="https://fanbasis.com/enterprises" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="DataForSEO Data, SEO and Scraping Basic REST · SDK · OTHER build_now" data-category="Data, SEO and Scraping" data-status="validated">
+        <td><span class="row-id">51</span><strong>DataForSEO</strong><span class="verified">Human checked</span></td>
+        <td>Data, SEO and Scraping</td>
+        <td>Basic</td>
+        <td><span class="pill access">Paid Self Serve</span></td>
+        <td>REST · SDK · OTHER <span class="subtle">/ broad</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://docs.dataforseo.com/v3/auth" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="SE Ranking Data, SEO and Scraping Api Key REST · SDK · OTHER build_now" data-category="Data, SEO and Scraping" data-status="validated">
+        <td><span class="row-id">52</span><strong>SE Ranking</strong></td>
+        <td>Data, SEO and Scraping</td>
+        <td>Api Key</td>
+        <td><span class="pill access">Paid Self Serve</span></td>
+        <td>REST · SDK · OTHER <span class="subtle">/ broad</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://seranking.com/api.html" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+      <tr data-search="Ahrefs Data, SEO and Scraping Api Key · Oauth2 REST · SDK · OTHER build_now" data-category="Data, SEO and Scraping" data-status="validated">
+        <td><span class="row-id">53</span><strong>Ahrefs</strong></td>
+        <td>Data, SEO and Scraping</td>
+        <td>Api Key · Oauth2</td>
+        <td><span class="pill access">Paid Self Serve</span></td>
+        <td>REST · SDK · OTHER <span class="subtle">/ broad</span></td>
+        <td><span class="pill verdict build_now">Build Now</span><a class="evidence" href="https://ahrefs.com/api/documentation/metrics-extended" target="_blank" rel="noreferrer">Evidence ↗</a></td>
+      </tr>
+        <tr class="queued" data-search="MrScraper Data, SEO and Scraping" data-category="Data, SEO and Scraping" data-status="queued">
+          <td><span class="row-id">54</span><strong>MrScraper</strong></td>
+          <td>Data, SEO and Scraping</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Apify Data, SEO and Scraping" data-category="Data, SEO and Scraping" data-status="queued">
+          <td><span class="row-id">55</span><strong>Apify</strong></td>
+          <td>Data, SEO and Scraping</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Firecrawl Data, SEO and Scraping" data-category="Data, SEO and Scraping" data-status="queued">
+          <td><span class="row-id">56</span><strong>Firecrawl</strong></td>
+          <td>Data, SEO and Scraping</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Bright Data Data, SEO and Scraping" data-category="Data, SEO and Scraping" data-status="queued">
+          <td><span class="row-id">57</span><strong>Bright Data</strong></td>
+          <td>Data, SEO and Scraping</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Sherlock Data, SEO and Scraping" data-category="Data, SEO and Scraping" data-status="queued">
+          <td><span class="row-id">58</span><strong>Sherlock</strong></td>
+          <td>Data, SEO and Scraping</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Waterfall.io Data, SEO and Scraping" data-category="Data, SEO and Scraping" data-status="queued">
+          <td><span class="row-id">59</span><strong>Waterfall.io</strong></td>
+          <td>Data, SEO and Scraping</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Clay Data, SEO and Scraping" data-category="Data, SEO and Scraping" data-status="queued">
+          <td><span class="row-id">60</span><strong>Clay</strong></td>
+          <td>Data, SEO and Scraping</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="GitHub Developer, Infra and Data platforms" data-category="Developer, Infra and Data platforms" data-status="queued">
+          <td><span class="row-id">61</span><strong>GitHub</strong></td>
+          <td>Developer, Infra and Data platforms</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Vercel Developer, Infra and Data platforms" data-category="Developer, Infra and Data platforms" data-status="queued">
+          <td><span class="row-id">62</span><strong>Vercel</strong></td>
+          <td>Developer, Infra and Data platforms</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Netlify Developer, Infra and Data platforms" data-category="Developer, Infra and Data platforms" data-status="queued">
+          <td><span class="row-id">63</span><strong>Netlify</strong></td>
+          <td>Developer, Infra and Data platforms</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Cloudflare Developer, Infra and Data platforms" data-category="Developer, Infra and Data platforms" data-status="queued">
+          <td><span class="row-id">64</span><strong>Cloudflare</strong></td>
+          <td>Developer, Infra and Data platforms</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Supabase Developer, Infra and Data platforms" data-category="Developer, Infra and Data platforms" data-status="queued">
+          <td><span class="row-id">65</span><strong>Supabase</strong></td>
+          <td>Developer, Infra and Data platforms</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Neo4j Developer, Infra and Data platforms" data-category="Developer, Infra and Data platforms" data-status="queued">
+          <td><span class="row-id">66</span><strong>Neo4j</strong></td>
+          <td>Developer, Infra and Data platforms</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Snowflake Developer, Infra and Data platforms" data-category="Developer, Infra and Data platforms" data-status="queued">
+          <td><span class="row-id">67</span><strong>Snowflake</strong></td>
+          <td>Developer, Infra and Data platforms</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="MongoDB Atlas Developer, Infra and Data platforms" data-category="Developer, Infra and Data platforms" data-status="queued">
+          <td><span class="row-id">68</span><strong>MongoDB Atlas</strong></td>
+          <td>Developer, Infra and Data platforms</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Datadog Developer, Infra and Data platforms" data-category="Developer, Infra and Data platforms" data-status="queued">
+          <td><span class="row-id">69</span><strong>Datadog</strong></td>
+          <td>Developer, Infra and Data platforms</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Sentry Developer, Infra and Data platforms" data-category="Developer, Infra and Data platforms" data-status="queued">
+          <td><span class="row-id">70</span><strong>Sentry</strong></td>
+          <td>Developer, Infra and Data platforms</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Notion Productivity and Project Management" data-category="Productivity and Project Management" data-status="queued">
+          <td><span class="row-id">71</span><strong>Notion</strong></td>
+          <td>Productivity and Project Management</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Airtable Productivity and Project Management" data-category="Productivity and Project Management" data-status="queued">
+          <td><span class="row-id">72</span><strong>Airtable</strong></td>
+          <td>Productivity and Project Management</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Linear Productivity and Project Management" data-category="Productivity and Project Management" data-status="queued">
+          <td><span class="row-id">73</span><strong>Linear</strong></td>
+          <td>Productivity and Project Management</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Jira Productivity and Project Management" data-category="Productivity and Project Management" data-status="queued">
+          <td><span class="row-id">74</span><strong>Jira</strong></td>
+          <td>Productivity and Project Management</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Asana Productivity and Project Management" data-category="Productivity and Project Management" data-status="queued">
+          <td><span class="row-id">75</span><strong>Asana</strong></td>
+          <td>Productivity and Project Management</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Monday.com Productivity and Project Management" data-category="Productivity and Project Management" data-status="queued">
+          <td><span class="row-id">76</span><strong>Monday.com</strong></td>
+          <td>Productivity and Project Management</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="ClickUp Productivity and Project Management" data-category="Productivity and Project Management" data-status="queued">
+          <td><span class="row-id">77</span><strong>ClickUp</strong></td>
+          <td>Productivity and Project Management</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Coda Productivity and Project Management" data-category="Productivity and Project Management" data-status="queued">
+          <td><span class="row-id">78</span><strong>Coda</strong></td>
+          <td>Productivity and Project Management</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Smartsheet Productivity and Project Management" data-category="Productivity and Project Management" data-status="queued">
+          <td><span class="row-id">79</span><strong>Smartsheet</strong></td>
+          <td>Productivity and Project Management</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Harvest Productivity and Project Management" data-category="Productivity and Project Management" data-status="queued">
+          <td><span class="row-id">80</span><strong>Harvest</strong></td>
+          <td>Productivity and Project Management</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Stripe Finance and Fintech" data-category="Finance and Fintech" data-status="queued">
+          <td><span class="row-id">81</span><strong>Stripe</strong></td>
+          <td>Finance and Fintech</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Plaid Finance and Fintech" data-category="Finance and Fintech" data-status="queued">
+          <td><span class="row-id">82</span><strong>Plaid</strong></td>
+          <td>Finance and Fintech</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Binance Finance and Fintech" data-category="Finance and Fintech" data-status="queued">
+          <td><span class="row-id">83</span><strong>Binance</strong></td>
+          <td>Finance and Fintech</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Paygent Connect Finance and Fintech" data-category="Finance and Fintech" data-status="queued">
+          <td><span class="row-id">84</span><strong>Paygent Connect</strong></td>
+          <td>Finance and Fintech</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="iPayX Finance and Fintech" data-category="Finance and Fintech" data-status="queued">
+          <td><span class="row-id">85</span><strong>iPayX</strong></td>
+          <td>Finance and Fintech</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="QuickBooks Finance and Fintech" data-category="Finance and Fintech" data-status="queued">
+          <td><span class="row-id">86</span><strong>QuickBooks</strong></td>
+          <td>Finance and Fintech</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Xero Finance and Fintech" data-category="Finance and Fintech" data-status="queued">
+          <td><span class="row-id">87</span><strong>Xero</strong></td>
+          <td>Finance and Fintech</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Brex Finance and Fintech" data-category="Finance and Fintech" data-status="queued">
+          <td><span class="row-id">88</span><strong>Brex</strong></td>
+          <td>Finance and Fintech</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Ramp Finance and Fintech" data-category="Finance and Fintech" data-status="queued">
+          <td><span class="row-id">89</span><strong>Ramp</strong></td>
+          <td>Finance and Fintech</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="PitchBook Finance and Fintech" data-category="Finance and Fintech" data-status="queued">
+          <td><span class="row-id">90</span><strong>PitchBook</strong></td>
+          <td>Finance and Fintech</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="NotebookLM AI, Research and Media-native" data-category="AI, Research and Media-native" data-status="queued">
+          <td><span class="row-id">91</span><strong>NotebookLM</strong></td>
+          <td>AI, Research and Media-native</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Otter AI AI, Research and Media-native" data-category="AI, Research and Media-native" data-status="queued">
+          <td><span class="row-id">92</span><strong>Otter AI</strong></td>
+          <td>AI, Research and Media-native</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Fathom AI, Research and Media-native" data-category="AI, Research and Media-native" data-status="queued">
+          <td><span class="row-id">93</span><strong>Fathom</strong></td>
+          <td>AI, Research and Media-native</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Consensus AI, Research and Media-native" data-category="AI, Research and Media-native" data-status="queued">
+          <td><span class="row-id">94</span><strong>Consensus</strong></td>
+          <td>AI, Research and Media-native</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Reducto AI, Research and Media-native" data-category="AI, Research and Media-native" data-status="queued">
+          <td><span class="row-id">95</span><strong>Reducto</strong></td>
+          <td>AI, Research and Media-native</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Devin AI, Research and Media-native" data-category="AI, Research and Media-native" data-status="queued">
+          <td><span class="row-id">96</span><strong>Devin</strong></td>
+          <td>AI, Research and Media-native</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="higgsfield AI, Research and Media-native" data-category="AI, Research and Media-native" data-status="queued">
+          <td><span class="row-id">97</span><strong>higgsfield</strong></td>
+          <td>AI, Research and Media-native</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Mermaid CLI AI, Research and Media-native" data-category="AI, Research and Media-native" data-status="queued">
+          <td><span class="row-id">98</span><strong>Mermaid CLI</strong></td>
+          <td>AI, Research and Media-native</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="YouTube Transcript AI, Research and Media-native" data-category="AI, Research and Media-native" data-status="queued">
+          <td><span class="row-id">99</span><strong>YouTube Transcript</strong></td>
+          <td>AI, Research and Media-native</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr>
+        <tr class="queued" data-search="Grain AI, Research and Media-native" data-category="AI, Research and Media-native" data-status="queued">
+          <td><span class="row-id">100</span><strong>Grain</strong></td>
+          <td>AI, Research and Media-native</td><td colspan="4"><span class="pill muted">Queued — quota-bounded run</span></td>
+        </tr></tbody></table></div><p class="footnote"><span id="visible">100</span> rows shown · Raw results, cached evidence and the runnable agent are in the source repository.</p></div></section>
+</main>
+<footer><div class="wrap"><strong>API Atlas</strong> turns an integration request queue into evidence-backed build, verify or outreach decisions. Built with Composio SDK + MCP; synthesis models are replaceable, evidence is not.</div></footer>
+<script>
+const q=document.querySelector('#search'),cat=document.querySelector('#category'),status=document.querySelector('#status'),rows=[...document.querySelectorAll('#rows tr')],visible=document.querySelector('#visible');
+function filter(){let n=0;for(const row of rows){const show=(!q.value||row.dataset.search.toLowerCase().includes(q.value.toLowerCase()))&&(!cat.value||row.dataset.category===cat.value)&&(!status.value||row.dataset.status===status.value);row.hidden=!show;if(show)n++}visible.textContent=n}[q,cat,status].forEach(el=>el.addEventListener('input',filter));
+</script></body></html>

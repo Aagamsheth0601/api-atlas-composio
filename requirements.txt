@@ -7,6 +7,7 @@ composio==0.23.0
 google-genai>=2.3,<3
 mcp>=1.9,<2
 python-dotenv>=1,<2
+httpx>=0.27,<1
 
 # Validate every agent record before it can enter the final dataset.
 jsonschema>=4.23,<5

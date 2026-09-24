@@ -188,3 +188,82 @@ the entire product.
   provider outages.
 - **Fix:** Retry both 429 rate limits and 503 unavailable responses with bounded
   delays. Checkpointing keeps completed apps and failed apps are retried on resume.
+
+### Gemini Flash daily quota interrupted batched synthesis
+
+- **Symptom:** The optimized runner collected evidence for five apps, then Gemini
+  rejected the single synthesis call with the free-tier limit of 20 requests per
+  day for `gemini-2.5-flash`.
+- **Root cause:** Earlier feasibility calls consumed the daily model allowance,
+  and the runner only checkpointed after synthesis rather than after retrieval.
+- **Fix:** Cache each MCP evidence packet immediately, allow an explicit synthesis
+  model, and resume without repeating retrieval. Do not silently downgrade to
+  Flash-Lite.
+
+### Listed Gemini 2.5 Pro model was retired for new users
+
+- **Symptom:** The model-list API returned `gemini-2.5-pro`, but generation failed
+  with 404 and directed new users to Gemini 3.1 Pro Preview. Gemini 3.1 Pro then
+  reported a free-tier quota of zero.
+- **Root cause:** Model discovery describes catalog entries, not entitlement or
+  usable free-tier quota.
+- **Fix:** Treat an actual bounded generation as the capability check. Use the
+  accessible Gemini 3 Flash Preview for the pilot and measure its output against
+  the deep baseline; document that billed Pro synthesis remains an upgrade path.
+
+### Fast-path synthesis did not retry temporary model outages
+
+- **Symptom:** Cached five-app evidence reached Gemini 3 Flash synthesis, which
+  returned a temporary 503 high-demand response.
+- **Root cause:** Transient retry handling existed only in the original deep
+  runner, not the new batched runner.
+- **Fix:** Add bounded 503 and per-minute 429 retries to batch synthesis while
+  failing immediately for daily or zero-quota billing gates.
+
+### PowerShell parsed a formatting pipe inside inline Python
+
+- **Symptom:** A model-catalog inspection command failed because the `|` used as
+  display punctuation inside an inline Python f-string was treated as a
+  PowerShell pipeline operator.
+- **Root cause:** Nested shell quoting made the pipe visible to PowerShell before
+  Python received the command.
+- **Fix:** Avoid shell-sensitive punctuation in inline Python commands and move
+  reusable network logic into tested project modules.
+
+### Antigravity's 12k budget ended before a final answer
+
+- **Symptom:** The first managed-agent smoke test completed quickly but returned
+  `status: incomplete`, no `output_text`, and about 15k total tokens used.
+- **Root cause:** Agent planning and two grounded searches consumed more than the
+  12k best-effort budget before it could synthesize the requested JSON.
+- **Fix:** Reject incomplete interactions explicitly and use a measured 30k cap
+  for the single-app pilot before choosing a safe multi-app batch size.
+
+### Antigravity MCP configuration errors lacked provider details
+
+- **Symptom:** The three-app MCP pilot returned HTTP 400 for every app while the
+  runner displayed only a generic `HTTPStatusError` link.
+- **Root cause:** `raise_for_status()` discarded the useful validation body in
+  user-facing logs, and the pilot lacked a one-app configuration mode.
+- **Fix:** Surface a bounded response body and add `--limit` so configuration is
+  proven on one app before spending requests across a batch.
+
+### Full runner skipped batches during the Antigravity TPM window
+
+- **Symptom:** Immediately after a successful deep batch, the resumed runner
+  received a 429 with an explicit retry delay and rapidly marked subsequent
+  batches failed instead of waiting.
+- **Root cause:** The runner checkpointed content failures but lacked quota-aware
+  transport retry handling.
+- **Fix:** Parse Google's stated TPM retry delay, wait once with a small buffer,
+  and retry the same batch up to three times. Failed records remain resumable.
+
+### Seven-app fast synthesis omitted one record
+
+- **Symptom:** Flash-Lite returned six records for the seven-app batch covering
+  IDs 58–64.
+- **Root cause:** The batch was too large for reliable constrained extraction;
+  accepting it would have risked mapping records to the wrong apps.
+- **Fix:** Reject the batch atomically, retain its cached MCP evidence, and resume
+  the remaining dataset in five-app batches on the available Gemini 3.8 Flash
+  quota.
