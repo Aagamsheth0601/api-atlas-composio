@@ -48,7 +48,7 @@
         "types": {
           "type": "array",
           "uniqueItems": true,
-          "items": { "enum": ["rest", "graphql", "sdk", "cli", "webhook", "other", "unknown"] }
+          "items": { "enum": ["rest", "graphql", "soap", "sdk", "cli", "webhook", "other", "unknown"] }
         },
         "breadth": { "enum": ["narrow", "moderate", "broad", "unknown"] },
         "public_docs": { "type": "boolean" },

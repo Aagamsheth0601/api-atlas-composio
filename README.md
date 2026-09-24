@@ -17,8 +17,18 @@ The live feasibility test passes end to end:
 4. The ignored run artifact contains a grounded Salesforce answer and official
    documentation URLs.
 
-The next checkpoint expands this proven path to the deliberately varied
-three-app feasibility set before scaling to all 100 apps.
+The three-app feasibility pipeline also passes schema validation:
+
+| App | Verdict | Confidence | Human review | Evidence |
+| --- | --- | ---: | --- | ---: |
+| Salesforce | Build now | 0.95 | No | 7 |
+| fanbasis | Build now | 0.80 | Yes | 7 |
+| PitchBook | Constrained | 0.80 | Yes | 7 |
+
+The pipeline checkpoints after every app, resumes validated records, retries
+provider rate limits, limits research turns and duration, and refuses to promote
+records that fail the JSON Schema. Generated feasibility results remain ignored
+until a human review promotes them.
 
 ## Secret setup
 
@@ -34,3 +44,9 @@ Keys, not a `ck_...` consumer MCP key.
 
 Generated run artifacts are written beneath `data/runs/` and remain ignored
 until they have passed validation and are intentionally promoted.
+
+Run the three-app feasibility pipeline:
+
+```powershell
+.\.venv\Scripts\python.exe -m scripts.research_apps
+```

@@ -132,3 +132,22 @@ the entire product.
   access to Git's internal metadata directory during that command.
 - **Fix:** Re-run only the reviewed `git add` and `git commit` operations with
   repository metadata permission, then verify the branch and pushed commit.
+
+### PowerShell consumed Markdown backticks in an inline Python test
+
+- **Symptom:** A one-line parser test failed with an unterminated Python string
+  even though both source modules compiled.
+- **Root cause:** PowerShell treated the Markdown fence backticks inside the
+  `python -c` argument as escape characters before Python received the text.
+- **Fix:** Keep fenced-parser cases in Python test files and avoid embedding
+  backticks in PowerShell command strings.
+
+### First feasibility batch exposed taxonomy and quota gaps
+
+- **Symptom:** Salesforce was rejected because the schema did not allow SOAP;
+  fanbasis hit Gemini's five-requests-per-minute free-tier limit; PitchBook
+  validated after five MCP calls.
+- **Root cause:** The API taxonomy was incomplete, and the first pipeline version
+  surfaced rate limits but did not retry or resume completed records.
+- **Fix:** Add `soap`, checkpoint by app, reuse validated records, apply bounded
+  rate-limit retries, and enforce a three-minute per-app timeout.
