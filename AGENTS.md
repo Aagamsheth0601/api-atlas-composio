@@ -151,3 +151,22 @@ the entire product.
   surfaced rate limits but did not retry or resume completed records.
 - **Fix:** Add `soap`, checkpoint by app, reuse validated records, apply bounded
   rate-limit retries, and enforce a three-minute per-app timeout.
+
+### Flash-Lite stopped after its first MCP result
+
+- **Symptom:** `gemini-2.5-flash-lite` selected Tavily but then returned neither
+  another tool call nor final text after receiving the search result.
+- **Root cause:** The smaller model did not reliably complete this multi-step
+  research loop under the same prompt and tool schemas.
+- **Fix:** Keep `gemini-2.5-flash` for evidence research. Do not treat a cheaper
+  model as equivalent without a measured quality comparison.
+
+### PowerShell cleanup masked a failed process exit code
+
+- **Symptom:** The combined command reported exit code zero even though the
+  Python smoke test raised a runtime error.
+- **Root cause:** A later `Remove-Item Env:GOOGLE_MODEL` command succeeded and
+  became the PowerShell process's final exit status.
+- **Fix:** Inspect the Python trace, never use a cleanup command as proof of test
+  success, and run behavioral verification as the final command or explicitly
+  preserve its exit code.

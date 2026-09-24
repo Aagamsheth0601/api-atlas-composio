@@ -65,3 +65,18 @@ Run the three-app feasibility pipeline:
 ```powershell
 .\.venv\Scripts\python.exe -m scripts.research_apps
 ```
+
+## Full research manifest
+
+`data/seed/apps.json` is reproducibly imported from the assignment and guarded
+by tests requiring IDs 1–100, 100 unique names, non-empty website hints, and ten
+categories containing ten apps each.
+
+Preview a quota-aware run without spending model requests:
+
+```powershell
+.\.venv\Scripts\python.exe -m scripts.plan_run --start-id 1 --end-id 10
+```
+
+The planner uses observed MCP calls from validated runs and the active account's
+RPM limit. This makes the time/cost decision explicit before a large run begins.
