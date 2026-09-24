@@ -1,0 +1,12 @@
+# Docs require 0.22.1+ for session MCP headers. PyPI skips from 0.22.0 to
+# 0.23.0, so 0.23.0 is the smallest published version satisfying that rule.
+composio==0.23.0
+
+# Model client and local configuration. Version 2.3+ exposes the Interactions
+# API used for authenticated remote MCP servers.
+google-genai>=2.3,<3
+mcp>=1.9,<2
+python-dotenv>=1,<2
+
+# Validate every agent record before it can enter the final dataset.
+jsonschema>=4.23,<5
