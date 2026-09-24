@@ -47,6 +47,7 @@ verification work.
 - [ ] Field-level accuracy score for first pass
 - [ ] Correct sampled mistakes and rerun validators
 - [ ] Report final accuracy and remaining unresolved cases
+- [x] Accuracy methodology and sampling plan documented before the full run
 
 ## Submission
 
@@ -58,4 +59,3 @@ verification work.
 - [ ] Live deployment
 - [x] Private source repository during development
 - [ ] Reviewer-accessible repository decision and final secret scan
-

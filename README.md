@@ -80,3 +80,7 @@ Preview a quota-aware run without spending model requests:
 
 The planner uses observed MCP calls from validated runs and the active account's
 RPM limit. This makes the time/cost decision explicit before a large run begins.
+
+Accuracy is measured through a predeclared field-level audit, not inferred from
+model confidence. See `docs/accuracy-methodology.md` for the stratified sample,
+browser checks, correction loop, and the limited role of paid quota in scaling.
