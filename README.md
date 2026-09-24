@@ -30,6 +30,21 @@ provider rate limits, limits research turns and duration, and refuses to promote
 records that fail the JSON Schema. Generated feasibility results remain ignored
 until a human review promotes them.
 
+## Two-layer clustering
+
+API Atlas preserves the assignment's ten market categories, then derives three
+stable operational views from validated facts:
+
+- **Integration archetype:** record systems, communication channels, transaction
+  rails, growth channels, data providers, control planes, or content processors.
+- **Readiness cohort:** build now, build with constraints, partnership outreach,
+  human verification, or blocked/unclear.
+- **Auth burden:** low, moderate, high, or unknown.
+
+The research agent gathers evidence; deterministic rules assign these portfolio
+clusters. This prevents a model rerun from silently changing what “build now”
+means and produces chart-ready counts for the case-study page.
+
 ## Secret setup
 
 Copy `.env.example` to `.env` and populate it locally. `.env` is gitignored.
