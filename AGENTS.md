@@ -170,3 +170,12 @@ the entire product.
 - **Fix:** Inspect the Python trace, never use a cleanup command as proof of test
   success, and run behavioral verification as the final command or explicitly
   preserve its exit code.
+
+### Direct script execution could not import the local package
+
+- **Symptom:** `python scripts/research_apps.py --help` failed with
+  `ModuleNotFoundError: No module named 'api_atlas'`.
+- **Root cause:** Python placed the `scripts` directory, rather than the repository
+  root, at the front of `sys.path` for direct file execution.
+- **Fix:** Bootstrap the resolved repository root before importing the local
+  package, and keep the documented direct command covered by a subprocess test.

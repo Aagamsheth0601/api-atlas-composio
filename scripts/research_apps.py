@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import asyncio
+import argparse
 import json
 import os
 import re
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlparse
@@ -17,13 +19,29 @@ from jsonschema import Draft202012Validator, FormatChecker
 from mcp import ClientSession
 from mcp.client.streamable_http import create_mcp_http_client, streamable_http_client
 
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 from api_atlas.researcher import build_prompt, extract_json, research_with_mcp
 
 
-ROOT = Path(__file__).resolve().parents[1]
-SEED_PATH = ROOT / "data" / "seed" / "feasibility_apps.json"
 SCHEMA_PATH = ROOT / "schemas" / "app_research.schema.json"
-OUTPUT_PATH = ROOT / "data" / "runs" / "feasibility-results.json"
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Research apps through Composio MCP and checkpoint each result."
+    )
+    parser.add_argument(
+        "--full",
+        action="store_true",
+        help="Use the 100-app assignment manifest instead of the 3-app feasibility set.",
+    )
+    parser.add_argument("--start-id", type=int, default=1)
+    parser.add_argument("--end-id", type=int, default=100)
+    parser.add_argument("--limit", type=int)
+    return parser.parse_args()
 
 
 def require_secret(name: str) -> str:
@@ -58,16 +76,30 @@ async def research_with_retry(*args: object) -> tuple[str, list[str]]:
 
 
 async def run() -> None:
+    args = parse_args()
     load_dotenv(ROOT / ".env")
     composio_key = require_secret("COMPOSIO_API_KEY")
     google_key = require_secret("GOOGLE_API_KEY")
-    apps = json.loads(SEED_PATH.read_text(encoding="utf-8"))
+    seed_path = ROOT / "data" / "seed" / (
+        "apps.json" if args.full else "feasibility_apps.json"
+    )
+    output_path = ROOT / "data" / "runs" / (
+        "full-results.json" if args.full else "feasibility-results.json"
+    )
+    apps = json.loads(seed_path.read_text(encoding="utf-8"))
+    apps = [
+        app for app in apps if args.start_id <= app["id"] <= args.end_id
+    ]
+    if args.limit is not None:
+        apps = apps[: args.limit]
+    if not apps:
+        raise RuntimeError("No apps matched the selected ID range and limit")
     schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
     validator = Draft202012Validator(schema, format_checker=FormatChecker())
 
     composio = Composio(api_key=composio_key)
     session = composio.sessions.create(
-        user_id="api-atlas-feasibility",
+        user_id="api-atlas-full-run" if args.full else "api-atlas-feasibility",
         toolkits=["composio_search"],
         tools={
             "composio_search": {
@@ -86,8 +118,8 @@ async def run() -> None:
     )
 
     client = genai.Client(api_key=google_key)
-    if OUTPUT_PATH.exists():
-        existing = json.loads(OUTPUT_PATH.read_text(encoding="utf-8"))
+    if output_path.exists():
+        existing = json.loads(output_path.read_text(encoding="utf-8"))
     else:
         existing = []
     results_by_app = {item["app"]: item for item in existing}
@@ -146,13 +178,13 @@ async def run() -> None:
                         }
                         print(f"  FAILED: {type(exc).__name__}: {exc}", flush=True)
 
-                    OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+                    output_path.parent.mkdir(parents=True, exist_ok=True)
                     ordered_results = [
                         results_by_app[item["app"]]
                         for item in apps
                         if item["app"] in results_by_app
                     ]
-                    OUTPUT_PATH.write_text(
+                    output_path.write_text(
                         json.dumps(ordered_results, indent=2), encoding="utf-8"
                     )
 

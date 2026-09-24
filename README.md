@@ -66,6 +66,17 @@ Run the three-app feasibility pipeline:
 .\.venv\Scripts\python.exe -m scripts.research_apps
 ```
 
+Run or resume the complete assignment dataset:
+
+```powershell
+.\.venv\Scripts\python.exe .\scripts\research_apps.py --full
+```
+
+Every app is checkpointed to the ignored `data/runs/full-results.json` file.
+An interrupted run can use the same command: validated records are reused and
+failed records are retried. ID ranges and `--limit` are available for bounded
+tests without changing the source manifest.
+
 ## Full research manifest
 
 `data/seed/apps.json` is reproducibly imported from the assignment and guarded
