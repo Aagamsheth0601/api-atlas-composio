@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api-atlas.local/schemas/app-research.schema.json",
+  "title": "API Atlas app research record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id", "app", "category", "description", "auth", "access", "api",
+    "verdict", "evidence", "quality"
+  ],
+  "properties": {
+    "id": { "type": "integer", "minimum": 1 },
+    "app": { "type": "string", "minLength": 1 },
+    "category": { "type": "string", "minLength": 1 },
+    "description": { "type": "string", "minLength": 1 },
+    "auth": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["methods", "notes"],
+      "properties": {
+        "methods": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": ["oauth2", "api_key", "basic", "token", "other", "unknown"]
+          }
+        },
+        "notes": { "type": "string" }
+      }
+    },
+    "access": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["level", "main_friction"],
+      "properties": {
+        "level": {
+          "enum": ["free_self_serve", "trial_self_serve", "paid_self_serve", "admin_gated", "partner_gated", "unknown"]
+        },
+        "main_friction": { "type": ["string", "null"] }
+      }
+    },
+    "api": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["types", "breadth", "public_docs", "existing_mcp", "composio_toolkit"],
+      "properties": {
+        "types": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "enum": ["rest", "graphql", "sdk", "cli", "webhook", "other", "unknown"] }
+        },
+        "breadth": { "enum": ["narrow", "moderate", "broad", "unknown"] },
+        "public_docs": { "type": "boolean" },
+        "existing_mcp": { "enum": ["official", "community", "none_found", "unknown"] },
+        "composio_toolkit": { "enum": ["available", "not_found", "unknown"] }
+      }
+    },
+    "verdict": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "primary_blocker", "rationale"],
+      "properties": {
+        "status": { "enum": ["build_now", "constrained", "outreach", "blocked", "unclear"] },
+        "primary_blocker": { "type": ["string", "null"] },
+        "rationale": { "type": "string", "minLength": 1 }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["claim", "url", "source_type", "official", "retrieved_at"],
+        "properties": {
+          "claim": { "type": "string", "minLength": 1 },
+          "url": { "type": "string", "format": "uri" },
+          "source_type": { "enum": ["developer_docs", "help_docs", "pricing", "partner_page", "repository", "other"] },
+          "official": { "type": "boolean" },
+          "retrieved_at": { "type": "string", "format": "date-time" },
+          "supporting_note": { "type": "string" }
+        }
+      }
+    },
+    "quality": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["confidence", "missing_fields", "contradiction", "human_review_required", "verification_status"],
+      "properties": {
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "missing_fields": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "contradiction": { "type": "boolean" },
+        "human_review_required": { "type": "boolean" },
+        "verification_status": { "enum": ["unverified", "automated_checked", "human_checked", "corrected"] }
+      }
+    }
+  }
+}

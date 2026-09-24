@@ -1,0 +1,24 @@
+[
+  {
+    "id": 1,
+    "app": "Salesforce",
+    "category": "CRM and Sales",
+    "website_hint": "salesforce.com",
+    "test_reason": "Well-documented enterprise platform with OAuth and edition constraints"
+  },
+  {
+    "id": 50,
+    "app": "fanbasis",
+    "category": "Ecommerce",
+    "website_hint": "fanbasis.com",
+    "test_reason": "Obscure product likely to expose evidence-discovery weaknesses"
+  },
+  {
+    "id": 90,
+    "app": "PitchBook",
+    "category": "Finance and Fintech",
+    "website_hint": "pitchbook.com",
+    "test_reason": "Likely enterprise or partnership gating with ambiguous public API access"
+  }
+]
+
